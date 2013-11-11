@@ -122,7 +122,7 @@ static bool AmIBeingDebugged(void)
     const u_int32_t upperBounds = 5; //a higher number will result in less frequent sampling
     u_int32_t random = arc4random_uniform(upperBounds);
     
-    if(random == (upperBounds - 1))
+    if(random == (upperBounds - 1) || _isDebuggerAttached)
     {
         //Only collect data here, this has a 1/upperBounds
         //chnace of being triggered.
