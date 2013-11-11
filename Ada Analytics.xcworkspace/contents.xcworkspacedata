@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Projects/ada-analytics-demo/ada-analytics-demo.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Projects/ada/ada.xcodeproj">
    </FileRef>
 </Workspace>

@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E85495F51830E71B003D64D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85495F41830E71B003D64D4 /* Foundation.framework */; };
-		E85495FA1830E71B003D64D4 /* ada.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E85495F91830E71B003D64D4 /* ada.h */; };
-		E85495FC1830E71B003D64D4 /* ada.m in Sources */ = {isa = PBXBuildFile; fileRef = E85495FB1830E71B003D64D4 /* ada.m */; };
+		E85495FA1830E71B003D64D4 /* ADAAnalytics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E85495F91830E71B003D64D4 /* ADAAnalytics.h */; };
+		E85495FC1830E71B003D64D4 /* ADAAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = E85495FB1830E71B003D64D4 /* ADAAnalytics.m */; };
 		E85496031830E71B003D64D4 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85496021830E71B003D64D4 /* XCTest.framework */; };
 		E85496041830E71B003D64D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85495F41830E71B003D64D4 /* Foundation.framework */; };
 		E85496061830E71B003D64D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85496051830E71B003D64D4 /* UIKit.framework */; };
@@ -35,7 +35,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				E85495FA1830E71B003D64D4 /* ada.h in CopyFiles */,
+				E85495FA1830E71B003D64D4 /* ADAAnalytics.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,8 +45,8 @@
 		E85495F11830E71B003D64D4 /* libada.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libada.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85495F41830E71B003D64D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E85495F81830E71B003D64D4 /* ada-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ada-Prefix.pch"; sourceTree = "<group>"; };
-		E85495F91830E71B003D64D4 /* ada.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ada.h; sourceTree = "<group>"; };
-		E85495FB1830E71B003D64D4 /* ada.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ada.m; sourceTree = "<group>"; };
+		E85495F91830E71B003D64D4 /* ADAAnalytics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADAAnalytics.h; sourceTree = "<group>"; };
+		E85495FB1830E71B003D64D4 /* ADAAnalytics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ADAAnalytics.m; sourceTree = "<group>"; };
 		E85496011830E71B003D64D4 /* adaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = adaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85496021830E71B003D64D4 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E85496051830E71B003D64D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -110,8 +110,8 @@
 		E85495F61830E71B003D64D4 /* ada */ = {
 			isa = PBXGroup;
 			children = (
-				E85495F91830E71B003D64D4 /* ada.h */,
-				E85495FB1830E71B003D64D4 /* ada.m */,
+				E85495F91830E71B003D64D4 /* ADAAnalytics.h */,
+				E85495FB1830E71B003D64D4 /* ADAAnalytics.m */,
 				E85495F71830E71B003D64D4 /* Supporting Files */,
 			);
 			path = ada;
@@ -224,7 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E85495FC1830E71B003D64D4 /* ada.m in Sources */,
+				E85495FC1830E71B003D64D4 /* ADAAnalytics.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
