@@ -64,14 +64,14 @@ static bool AmIBeingDebugged(void)
 + (void)load
 {
 #ifdef ADA_LOGGING
-    NSLog(@"Loading ADA into Objective-C runtime");
+    NSLog(@"[ADA ANALYTICS] Loading ADA into Objective-C runtime");
 #endif
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [ADAAnalytics sharedAnalyticsManager];
         
 #ifdef ADA_LOGGING
-        NSLog(@"Singleton created on background thread");
+        NSLog(@"[ADA ANALYTICS] Singleton created on background thread");
 #endif
     });
 }
@@ -97,13 +97,13 @@ static bool AmIBeingDebugged(void)
 #ifdef DEBUG
         if(AmIBeingDebugged())
         {
-            NSLog(@"Running with a debugger attached, no data will be sent to the servers.");
+            NSLog(@"[ADA ANALYTICS] Running with a debugger attached, no data will be sent to the servers.");
             _isDebuggerAttached = YES;
         }
 #endif
         
 #ifdef ADA_LOGGING
-        NSLog(@"-init called while creating ADAAnalytics object");
+        NSLog(@"[ADA ANALYTICS] -init called while creating ADAAnalytics object");
 #endif
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -127,7 +127,7 @@ static bool AmIBeingDebugged(void)
         //Only collect data here, this has a 1/upperBounds
         //chnace of being triggered.
         
-        NSLog(@"\n%@\n%@\n%@\n%@\n%@",
+        NSLog(@"[ADA ANALYTICS] \n%@\n%@\n%@\n%@\n%@",
         [UIDevice currentDevice].model,
         [UIDevice currentDevice].localizedModel,
         [UIDevice currentDevice].systemName,
