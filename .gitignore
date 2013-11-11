@@ -1,2 +1,2 @@
 *.xccheckout
-Ada Analytics.xcworkspace/xcuserdata
+*xcuserdata*
