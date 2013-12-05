@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 #import "ADAAnalytics.h"
 
 #ifdef DEBUG
@@ -134,6 +135,58 @@ static bool AmIBeingDebugged(void)
         [UIDevice currentDevice].systemVersion,
         [[UIDevice currentDevice].identifierForVendor UUIDString]);
     }
+}
+
+- (void)collectDeviceFeatures
+{
+    /* OpenGLES
+     EAGLGetVersion(unsigned int* major, unsigned int* minor);
+     */
+    
+    /* CoreTelephony
+     CTCarrier *subscriberCellularProvider
+     + (CTSubscriber*) subscriber;
+     */
+    
+    /* CoreMotion
+     + (NSUInteger)availableAttitudeReferenceFrames NS_AVAILABLE(NA,5_0);
+     BOOL accelerometerAvailable;
+     BOOL gyroAvailable;
+     BOOL magnetometerAvailable
+     BOOL deviceMotionAvailable;
+     + (BOOL)isStepCountingAvailable;
+     */
+    
+    /* CoreLocation
+     + (BOOL)locationServicesEnabled
+     + (BOOL)headingAvailable
+     + (BOOL)significantLocationChangeMonitoringAvailable
+     + (BOOL)isMonitoringAvailableForClass:(Class)regionClass
+     + (BOOL)regionMonitoringEnabled
+     + (BOOL)isRangingAvailable
+     + (CLAuthorizationStatus)authorizationStatus
+     + (BOOL)deferredLocationUpdatesAvailable
+     */
+    
+    /* AVFoundation
+     + (NSArray *)devices;
+     + (NSArray *)devicesWithMediaType:(NSString *)mediaType;
+     
+     AVCaptureDevice
+     AVCaptureDevicePosition position;
+     BOOL hasFlash;
+     - (BOOL)isFlashModeSupported:(AVCaptureFlashMode)flashMode;
+     BOOL hasTorch;
+     - (BOOL)isFocusModeSupported:(AVCaptureFocusMode)focusMode;
+     BOOL focusPointOfInterestSupported;
+     BOOL autoFocusRangeRestrictionSupported
+     BOOL smoothAutoFocusSupported
+     - (BOOL)isExposureModeSupported:(AVCaptureExposureMode)exposureMode;
+     BOOL exposurePointOfInterestSupported
+     - (BOOL)isWhiteBalanceModeSupported:(AVCaptureWhiteBalanceMode)whiteBalanceMode
+     BOOL lowLightBoostSupported
+     CGFloat videoZoomFactor
+     */
 }
 
 @end
