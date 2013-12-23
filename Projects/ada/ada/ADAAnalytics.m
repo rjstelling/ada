@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 #import "ADAAnalytics.h"
+#import "ADAPayload.h"
+
+//Required for feature querying
+
+@import CoreTelephony;
 
 #ifdef DEBUG
 # include <assert.h>
@@ -16,6 +21,11 @@
 # include <sys/types.h>
 # include <unistd.h>
 # include <sys/sysctl.h>
+
+#pragma mark - Versioning
+
+ADAInt16 ADAMajorVersion = 1;
+ADAInt16 ADAMinorVersion = 0;
 
 #pragma mark - Debug Info
 
@@ -128,34 +138,46 @@ static bool AmIBeingDebugged(void)
         //Only collect data here, this has a 1/upperBounds
         //chnace of being triggered.
         
-        NSLog(@"[ADA ANALYTICS] \n%@\n%@\n%@\n%@\n%@",
-        [UIDevice currentDevice].model,
-        [UIDevice currentDevice].localizedModel,
-        [UIDevice currentDevice].systemName,
-        [UIDevice currentDevice].systemVersion,
-        [[UIDevice currentDevice].identifierForVendor UUIDString]);
+        [self collectDeviceInfo];
     }
 }
 
-- (void)collectDeviceFeatures
+- (void)collectDeviceInfo
 {
-    /* OpenGLES
-     EAGLGetVersion(unsigned int* major, unsigned int* minor);
-     */
+    ADAPayload *payload = [ADAPayload new];
     
-    /* CoreTelephony
-     CTCarrier *subscriberCellularProvider
-     + (CTSubscriber*) subscriber;
-     */
+    /* Device Info */
+    [self addString:[UIDevice currentDevice].model withFieldID:ADADeviceModelID toPayload:payload];
+    [self addString:[UIDevice currentDevice].localizedModel withFieldID:ADADeviceLocalizedModelID toPayload:payload];
+    [self addString:[UIDevice currentDevice].systemName withFieldID:ADADeviceSystemNameID toPayload:payload];
+    [self addString:[UIDevice currentDevice].systemVersion withFieldID:ADADeviceSystemVersionID toPayload:payload];
+    [self addString:[[UIDevice currentDevice].identifierForVendor UUIDString] withFieldID:ADADeviceIdentifierForVendorID toPayload:payload];
     
-    /* CoreMotion
-     + (NSUInteger)availableAttitudeReferenceFrames NS_AVAILABLE(NA,5_0);
-     BOOL accelerometerAvailable;
-     BOOL gyroAvailable;
-     BOOL magnetometerAvailable
-     BOOL deviceMotionAvailable;
-     + (BOOL)isStepCountingAvailable;
-     */
+    /* OpenGLES */
+    unsigned int oglesMajor = 0, oglesMinor = 0;
+    EAGLGetVersion(&oglesMajor, &oglesMinor);
+    [self addData:&oglesMajor length:sizeof(oglesMajor) withFieldID:ADAOpenGLESMajorID toPayload:payload];
+    [self addData:&oglesMinor length:sizeof(oglesMinor) withFieldID:ADAOpenGLESMinorID toPayload:payload];
+    
+    /* CoreTelephony */
+    CTTelephonyNetworkInfo *ctTelephonyNetworkInfo = [[CTTelephonyNetworkInfo alloc] init];
+    CTCarrier *ctCarrier = [ctTelephonyNetworkInfo subscriberCellularProvider];
+
+    [self addString:ctTelephonyNetworkInfo.currentRadioAccessTechnology withFieldID:ADATelephonyRadioAccessTechnologyID toPayload:payload];
+    [self addString:ctCarrier.carrierName withFieldID:ADATelephonyCarrierNameID toPayload:payload];
+    [self addString:ctCarrier.mobileCountryCode withFieldID:ADATelephonyMobileCountryCodeID toPayload:payload];
+    [self addString:ctCarrier.mobileNetworkCode withFieldID:ADATelephonyMobileNetworkCodeID toPayload:payload];
+    [self addString:ctCarrier.isoCountryCode withFieldID:ADATelephonyISOCountryCodeID toPayload:payload];
+    [self addBool:ctCarrier.allowsVOIP withFieldID:ADATelephonyAllowsVOIPID toPayload:payload];
+    
+    /* CoreMotion */
+    CMMotionManager *motionManager = [CMMotionManager new];
+    [self addInteger:[CMMotionManager availableAttitudeReferenceFrames] withFieldID:ADAMotionAttitudeReferenceFramesID toPayload:payload];
+    [self addBool:motionManager.isAccelerometerAvailable withFieldID:ADAMotionHasAccelerometerID toPayload:payload];
+    [self addBool:motionManager.isGyroAvailable withFieldID:ADAMotionHasGyroID toPayload:payload];
+    [self addBool:motionManager.isMagnetometerAvailable withFieldID:ADAMotionHasMagnetometerID toPayload:payload];
+    [self addBool:motionManager.isDeviceMotionAvailable withFieldID:ADAMotionHasDeviceMotionID toPayload:payload];
+    [self addBool:[CMStepCounter isStepCountingAvailable] withFieldID:ADAMotionHasStepCountingID toPayload:payload];
     
     /* CoreLocation
      + (BOOL)locationServicesEnabled
@@ -187,6 +209,63 @@ static bool AmIBeingDebugged(void)
      BOOL lowLightBoostSupported
      CGFloat videoZoomFactor
      */
+    
+    NSData *payloadData = [payload payloadData];
+    
+    NSLog(@"%@", payloadData);
+    NSLog(@"Data Length: %lu", (unsigned long)payloadData.length);
+}
+
+- (void)addString:(NSString *)dataString withFieldID:(ADADataFieldID)field toPayload:(ADAPayload *)payload
+{
+    NSParameterAssert(payload);
+    
+    if(!dataString)
+        return;
+    
+    NSLog(@"[ADA ANALYTICS] %03X -> %@", field, dataString);
+    
+    const char *stringData = [dataString UTF8String];
+    BOOL success = [payload appendData:stringData length:dataString.length field:field];
+    
+    NSAssert(success, @"Failed to add data.");
+    
+    if(!success)
+        NSLog(@"Failed");
+}
+
+- (void)addBool:(BOOL)yesNo withFieldID:(ADADataFieldID)field toPayload:(ADAPayload *)payload
+{
+    NSLog(@"[ADA ANALYTICS] %03X -> %d", field, yesNo);
+    
+    BOOL success = [payload appendData:&yesNo length:1 field:field];
+    
+    NSAssert(success, @"Failed to add data.");
+    
+    if(!success)
+        NSLog(@"Failed");
+}
+
+- (void)addInteger:(NSInteger)value withFieldID:(ADADataFieldID)field toPayload:(ADAPayload *)payload
+{
+    NSLog(@"[ADA ANALYTICS] %03X -> %d", field, value);
+    
+    BOOL success = [payload appendData:&value length:sizeof(value) field:field];
+    
+    NSAssert(success, @"Failed to add data.");
+    
+    if(!success)
+        NSLog(@"Failed");
+}
+
+- (void)addData:(void *)data length:(NSInteger)dataLength withFieldID:(ADADataFieldID)field toPayload:(ADAPayload *)payload
+{
+    BOOL success = [payload appendData:data length:dataLength field:field];
+    
+    NSAssert(success, @"Failed to add data.");
+    
+    if(!success)
+        NSLog(@"Failed");
 }
 
 @end
