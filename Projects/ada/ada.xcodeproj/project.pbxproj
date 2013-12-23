@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B7FF0ED5186859B70008D688 /* ADAPayload.m in Sources */ = {isa = PBXBuildFile; fileRef = B7FF0ED4186859B70008D688 /* ADAPayload.m */; };
+		B7FF0EDA186882810008D688 /* NSData+Hashing.m in Sources */ = {isa = PBXBuildFile; fileRef = B7FF0ED9186882810008D688 /* NSData+Hashing.m */; };
 		E85495F51830E71B003D64D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85495F41830E71B003D64D4 /* Foundation.framework */; };
 		E85495FA1830E71B003D64D4 /* ADAAnalytics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = E85495F91830E71B003D64D4 /* ADAAnalytics.h */; };
 		E85495FC1830E71B003D64D4 /* ADAAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = E85495FB1830E71B003D64D4 /* ADAAnalytics.m */; };
@@ -42,6 +44,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B7FF0ED3186859B70008D688 /* ADAPayload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADAPayload.h; sourceTree = "<group>"; };
+		B7FF0ED4186859B70008D688 /* ADAPayload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADAPayload.m; sourceTree = "<group>"; };
+		B7FF0ED6186880AE0008D688 /* ADATypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ADATypes.h; sourceTree = "<group>"; };
+		B7FF0ED8186882810008D688 /* NSData+Hashing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+Hashing.h"; path = "../simple-foundation-hashing/NSData+Hashing.h"; sourceTree = "<group>"; };
+		B7FF0ED9186882810008D688 /* NSData+Hashing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+Hashing.m"; path = "../simple-foundation-hashing/NSData+Hashing.m"; sourceTree = "<group>"; };
 		E85495F11830E71B003D64D4 /* libada.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libada.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85495F41830E71B003D64D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E85495F81830E71B003D64D4 /* ada-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ada-Prefix.pch"; sourceTree = "<group>"; };
@@ -78,10 +85,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B7FF0ED7186882210008D688 /* Hashing Categories */ = {
+			isa = PBXGroup;
+			children = (
+				B7FF0ED8186882810008D688 /* NSData+Hashing.h */,
+				B7FF0ED9186882810008D688 /* NSData+Hashing.m */,
+			);
+			name = "Hashing Categories";
+			path = ..;
+			sourceTree = "<group>";
+		};
 		E85495E81830E71B003D64D4 = {
 			isa = PBXGroup;
 			children = (
-				E85495F61830E71B003D64D4 /* ada */,
+				E85495F61830E71B003D64D4 /* Ada */,
 				E854960A1830E71B003D64D4 /* adaTests */,
 				E85495F31830E71B003D64D4 /* Frameworks */,
 				E85495F21830E71B003D64D4 /* Products */,
@@ -107,13 +124,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E85495F61830E71B003D64D4 /* ada */ = {
+		E85495F61830E71B003D64D4 /* Ada */ = {
 			isa = PBXGroup;
 			children = (
+				B7FF0ED6186880AE0008D688 /* ADATypes.h */,
 				E85495F91830E71B003D64D4 /* ADAAnalytics.h */,
 				E85495FB1830E71B003D64D4 /* ADAAnalytics.m */,
+				B7FF0ED3186859B70008D688 /* ADAPayload.h */,
+				B7FF0ED4186859B70008D688 /* ADAPayload.m */,
+				B7FF0ED7186882210008D688 /* Hashing Categories */,
 				E85495F71830E71B003D64D4 /* Supporting Files */,
 			);
+			name = Ada;
 			path = ada;
 			sourceTree = "<group>";
 		};
@@ -225,6 +247,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E85495FC1830E71B003D64D4 /* ADAAnalytics.m in Sources */,
+				B7FF0EDA186882810008D688 /* NSData+Hashing.m in Sources */,
+				B7FF0ED5186859B70008D688 /* ADAPayload.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +433,7 @@
 				E85496161830E71B003D64D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E85496171830E71B003D64D4 /* Build configuration list for PBXNativeTarget "adaTests" */ = {
 			isa = XCConfigurationList;
@@ -417,6 +442,7 @@
 				E85496191830E71B003D64D4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
