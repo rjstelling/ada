@@ -55,6 +55,14 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
     ADAMotionHasStepCountingID = 0xC25,
     ADAMotionAttitudeReferenceFramesID = 0xC26,
     
+    //CoreLocation
+    ADALocationServicesEnabledID = 0xC31,
+    ADALocationHeadingAvailableID = 0xC32,
+    ADALocationSignificantLocationChangeMonitoringAvailableID = 0xC33,
+    //isMonitoringAvailableForClass:(Class)regionClass
+    ADALocationRegionMonitoringEnabledID = 0xC34,
+    ADALocationRangingAvailableID = 0xC35,
+    
     //Version
     ADAMajorVersionID = 0xFFFF,
     ADAMinorVersionID = 0xEEEE

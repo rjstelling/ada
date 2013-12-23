@@ -14,6 +14,7 @@
 //Required for feature querying
 
 @import CoreTelephony;
+@import CoreLocation;
 
 #ifdef DEBUG
 # include <assert.h>
@@ -180,15 +181,15 @@ static bool AmIBeingDebugged(void)
     [self addBool:[CMStepCounter isStepCountingAvailable] withFieldID:ADAMotionHasStepCountingID toPayload:payload];
     
     /* CoreLocation
-     + (BOOL)locationServicesEnabled
-     + (BOOL)headingAvailable
-     + (BOOL)significantLocationChangeMonitoringAvailable
      + (BOOL)isMonitoringAvailableForClass:(Class)regionClass
-     + (BOOL)regionMonitoringEnabled
-     + (BOOL)isRangingAvailable
      + (CLAuthorizationStatus)authorizationStatus
      + (BOOL)deferredLocationUpdatesAvailable
      */
+    [self addBool:[CLLocationManager locationServicesEnabled] withFieldID:ADALocationServicesEnabledID toPayload:payload];
+    [self addBool:[CLLocationManager headingAvailable] withFieldID:ADALocationHeadingAvailableID toPayload:payload];
+    [self addBool:[CLLocationManager significantLocationChangeMonitoringAvailable] withFieldID:ADALocationSignificantLocationChangeMonitoringAvailableID toPayload:payload];
+    [self addBool:[CLLocationManager regionMonitoringEnabled] withFieldID:ADALocationRegionMonitoringEnabledID toPayload:payload];
+    [self addBool:[CLLocationManager isRangingAvailable] withFieldID:ADALocationRangingAvailableID toPayload:payload];
     
     /* AVFoundation
      + (NSArray *)devices;
