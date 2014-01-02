@@ -159,7 +159,7 @@ static bool AmIBeingDebugged(void)
     [self addBool:[UIDevice currentDevice].multitaskingSupported withFieldID:ADADeviceMultitaskingSupportID toPayload:payload];
     
     [self addString:[[NSLocale currentLocale] localeIdentifier] withFieldID:ADADeviceCurrentLocaleID toPayload:payload];
-        
+    
     /* Screen */
     [self addInteger:CGRectGetHeight([UIScreen mainScreen].bounds) withFieldID:ADADeviceScreenHeight toPayload:payload];
     [self addInteger:CGRectGetWidth([UIScreen mainScreen].bounds) withFieldID:ADADeviceScreenWidth toPayload:payload];
@@ -274,7 +274,63 @@ static bool AmIBeingDebugged(void)
     
     NSLog(@"%@", payloadData);
     NSLog(@"Data Length: %lu", (unsigned long)payloadData.length);
+    
+    
+    ///POST
+    //http://adalytics.io/service.cfc?method=test
+    // Create the request.
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://adalytics.io/service.cfc?method=test"]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"]];
+ 
+    // Specify that it will be a POST request
+    request.HTTPMethod = @"POST";
+    
+    // This is how we set header fields
+    //[request setValue:@"application/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    //[request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
+    
+    // Convert your data and set your request's HTTPBody property
+    //NSString *s = [[NSString alloc] initWithBytes:[payloadData bytes] length:payloadData.length encoding:NSASCIIStringEncoding];
+
+    ///*NSString **/s = [NSString stringWithUTF8String:[payloadData bytes]];
+    //NSString *stringData = [NSString stringWithFormat:@"content=%@", s];
+    //NSMutableData *requestBodyData = [[stringData dataUsingEncoding:NSASCIIStringEncoding] mutableCopy];
+    //[requestBodyData appendData:payloadData];
+    request.HTTPBody = payloadData;
+    
+    // Create url connection and fire request
+    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    
+    [conn start];
 }
+
+////
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    NSLog(@"%@", error);
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    NSURLRequest *req = [connection currentRequest];
+    
+    NSLog(@"%@", req);
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    NSLog(@"%@", response);
+}
+
+//- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
+//{
+//    
+//}
+
+//- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
+
+/////
 
 - (void)addOpenGLInfo:(EAGLContext *)oglesContext toPayload:(ADAPayload *)payload
 {
@@ -349,3 +405,20 @@ static bool AmIBeingDebugged(void)
 }
 
 @end
+
+#ifdef DEBUG
+
+@implementation ADAAnalytics (Debugging)
+
++ (void)resendPayload
+{
+    NSLog(@"[ADA ANALYTICS] %s", __PRETTY_FUNCTION__);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [[ADAAnalytics sharedAnalyticsManager] collectDeviceInfo];
+    });
+}
+
+@end
+
+#endif //DEBUG

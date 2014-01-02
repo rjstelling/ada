@@ -21,3 +21,13 @@ extern ADAInt16 ADAMinorVersion;
 @interface ADAAnalytics : NSObject
 
 @end
+
+#ifdef DEBUG
+
+@interface ADAAnalytics (Debugging)
+
++ (void)resendPayload;
+
+@end
+
+#endif //DEBUG

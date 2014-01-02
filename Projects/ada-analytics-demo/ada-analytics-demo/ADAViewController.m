@@ -30,4 +30,9 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)send:(id)sender
+{
+    [ADAAnalytics resendPayload];
+}
+
 @end
