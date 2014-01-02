@@ -21,6 +21,14 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
     ADADeviceSystemNameID = 0x0003,
     ADADeviceSystemVersionID = 0x0004,
     ADADeviceIdentifierForVendorID = 0x0005,
+    ADADeviceMultitaskingSupportID = 0x0006,
+    
+    ADADeviceCurrentLocaleID = 0x0007,
+    
+    //Screen
+    ADADeviceScreenHeight = 0x0011,
+    ADADeviceScreenWidth = 0x0012,
+    ADADeviceScreenScale = 0x0013,
     
     //0x100 -> 0x1FF are reserved fopr meta data
     ADAPayloadCreationDateYearID = 0x0100,
@@ -38,6 +46,10 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
     //OpenGL
     ADAOpenGLESMajorID = 0x0C01,
     ADAOpenGLESMinorID = 0x0C02,
+    ADAOpenGLESVersionID = 0x0C03,
+    ADAOpenGLESRendererID = 0x0C04,
+    ADAOpenGLESExtentionsID = 0x0C05,
+    ADAOpenGLESVendorID = 0x0C06,
     
     //CoreTelephony
     ADATelephonyRadioAccessTechnologyID = 0x0C11,
@@ -59,9 +71,24 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
     ADALocationServicesEnabledID = 0xC31,
     ADALocationHeadingAvailableID = 0xC32,
     ADALocationSignificantLocationChangeMonitoringAvailableID = 0xC33,
-    //isMonitoringAvailableForClass:(Class)regionClass
     ADALocationRegionMonitoringEnabledID = 0xC34,
     ADALocationRangingAvailableID = 0xC35,
+    ADALocationRegionMonitoringAvailableForCircularRegion = 0xC36,
+    ADALocationRegionMonitoringAvailableForBeaconRegion = 0xC37,
+    ADALocationDeferredUpdatesAvailable = 0xC38,
+    
+    //AVCaptureDevice
+    ADACaptureDeviceID /* Dictionary */ = 0xC41, //there will be multiple entries. The length refers to the end of the nested field-lenght-value items
+    ADACaptureDevicePositionID = 0xC42,
+    ADACaptureDeviceHasFlashID = 0xC43,
+    ADACaptureDeviceHasTourchID = 0xC44,
+    ADACaptureDeviceFocusPOISupportedID = 0xC45,
+    ADACaptureDeviceAutoFocusRangeRestrictionSupportedID = 0xC46,
+    ADACaptureDeviceSmoothAutoFocusSupportedID = 0xC47,
+    ADACaptureDeviceExposurePointOfInterestSupportedID = 0xC48,
+    ADACaptureDeviceLowLightBoostSupportedID = 0xC49,
+    ADACaptureDeviceModelID = 0xC4A,
+    ADACaptureDeviceLocalizedNameID = 0xC4B,
     
     //Version
     ADAMajorVersionID = 0xFFFF,
@@ -72,6 +99,9 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
 
 // Add data to the payload.
 - (BOOL)appendData:(const void *)data length:(NSInteger)length field:(ADADataFieldID)fieldID;
+
+//Serilized data, not added to the payload
++ (NSData *)dataField:(ADADataFieldID)fieldID data:(const void *)data length:(NSInteger)length;
 
 //CRC32 checksummed payload data.
 - (NSData *)payloadData;
