@@ -20,6 +20,27 @@ const NSInteger ADAInitialCapacity = (1024 * 2); //2k
     NSMutableData *_payloadData;
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder
+{
+    [aCoder encodeObject:_payloadData forKey:@"_payloadData"];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    
+    if(self)
+    {
+        _payloadData = [aDecoder decodeObjectForKey:@"_payloadData"];
+    }
+    
+    return self;
+}
+
+#pragma mark - Life Cycle
+
 - (instancetype)init
 {
     self = [super init];

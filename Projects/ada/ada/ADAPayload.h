@@ -95,7 +95,7 @@ typedef NS_ENUM(ADAInt32, ADADataFieldID)
     ADAMinorVersionID = 0xEEEE
 };
 
-@interface ADAPayload : NSObject
+@interface ADAPayload : NSObject <NSCoding>
 
 // Add data to the payload.
 - (BOOL)appendData:(const void *)data length:(NSInteger)length field:(ADADataFieldID)fieldID;
