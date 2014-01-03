@@ -10,6 +10,7 @@
 #import <CoreMotion/CoreMotion.h>
 #import "ADAAnalytics.h"
 #import "ADAPayload.h"
+#import "ADAPayloadOperation.h"
 
 //Required for feature querying
 
@@ -68,6 +69,7 @@ static bool AmIBeingDebugged(void)
 @implementation ADAAnalytics
 {
     BOOL _isDebuggerAttached;
+    NSOperationQueue *_queue;
 }
 
 #pragma mark - Life Cycle
@@ -123,6 +125,9 @@ static bool AmIBeingDebugged(void)
                                                  selector:@selector(onApplicationDidBecomeActiveNotification:)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
+        
+        _queue = [[NSOperationQueue alloc] init];
+        [_queue setMaxConcurrentOperationCount:1];
     }
     
     return self;
@@ -269,70 +274,11 @@ static bool AmIBeingDebugged(void)
         
         [self addData:[deviceData bytes] length:deviceData.length withFieldID:ADACaptureDeviceID toPayload:payload];
     }
-        
-    NSData *payloadData = [payload payloadData];
-    
-    NSLog(@"%@", payloadData);
-    NSLog(@"Data Length: %lu", (unsigned long)payloadData.length);
-    
-    ///POST
-    //http://adalytics.io/service.cfc?method=test
-    // Create the request.
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://adalytics.io/service.cfc?method=test"]];
-//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"]];
- 
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:1];
-        
-    // Specify that it will be a POST request
-    request.HTTPMethod = @"POST";
-    [request setValue:@"application/x-adalytics" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:[NSString stringWithFormat:@"adalytics/%d.%d", ADAMajorVersion, ADAMinorVersion] forHTTPHeaderField:@"User-Agent"];
-    
-    // This is how we set header fields
-    //[request setValue:@"application/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    //[request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
-    
-    request.HTTPBody = payloadData;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // Create url connection and fire request
-        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        [conn start];
-    });
+   
+    //Add to queue for processing, this will either save to disk or set over the wire depending
+    //on network conditions
+    [_queue addOperation:[ADAPayloadOperation payloadOperation:payload]];
 }
-
-////
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"%@", error);
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSURLRequest *req = [connection currentRequest];
-    
-    NSLog(@"%@", req);
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response
-{
-    NSLog(@"%@", response);
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    NSLog(@"%@", [[NSString alloc] initWithBytes:[data bytes] length:data.length encoding:NSUTF8StringEncoding]);
-}
-
-//- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
-//{
-//    
-//}
-
-//- (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge;
-
-/////
 
 - (void)addOpenGLInfo:(EAGLContext *)oglesContext toPayload:(ADAPayload *)payload
 {
