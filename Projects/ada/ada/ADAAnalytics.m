@@ -275,33 +275,30 @@ static bool AmIBeingDebugged(void)
     NSLog(@"%@", payloadData);
     NSLog(@"Data Length: %lu", (unsigned long)payloadData.length);
     
-    
     ///POST
     //http://adalytics.io/service.cfc?method=test
     // Create the request.
 //    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://adalytics.io/service.cfc?method=test"]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"]];
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"]];
  
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://164.177.156.26/ada/adalytics.php"] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:1];
+        
     // Specify that it will be a POST request
     request.HTTPMethod = @"POST";
+    [request setValue:@"application/x-adalytics" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"adalytics/%d.%d", ADAMajorVersion, ADAMinorVersion] forHTTPHeaderField:@"User-Agent"];
     
     // This is how we set header fields
     //[request setValue:@"application/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     //[request setValue:@"text/plain" forHTTPHeaderField:@"Content-Type"];
     
-    // Convert your data and set your request's HTTPBody property
-    //NSString *s = [[NSString alloc] initWithBytes:[payloadData bytes] length:payloadData.length encoding:NSASCIIStringEncoding];
-
-    ///*NSString **/s = [NSString stringWithUTF8String:[payloadData bytes]];
-    //NSString *stringData = [NSString stringWithFormat:@"content=%@", s];
-    //NSMutableData *requestBodyData = [[stringData dataUsingEncoding:NSASCIIStringEncoding] mutableCopy];
-    //[requestBodyData appendData:payloadData];
     request.HTTPBody = payloadData;
     
-    // Create url connection and fire request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    
-    [conn start];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // Create url connection and fire request
+        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        [conn start];
+    });
 }
 
 ////
@@ -318,9 +315,14 @@ static bool AmIBeingDebugged(void)
     NSLog(@"%@", req);
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response
 {
     NSLog(@"%@", response);
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    NSLog(@"%@", [[NSString alloc] initWithBytes:[data bytes] length:data.length encoding:NSUTF8StringEncoding]);
 }
 
 //- (BOOL)connectionShouldUseCredentialStorage:(NSURLConnection *)connection
@@ -345,7 +347,7 @@ static bool AmIBeingDebugged(void)
     const GLubyte *oglesRenderer = glGetString(GL_RENDERER);
     [self addString:[NSString stringWithUTF8String:(const char *)oglesRenderer] withFieldID:ADAOpenGLESRendererID toPayload:payload];
 
-    //Thi sis too long > 255 bytes
+    //This is too long > 255 bytes
 //    const GLubyte *oglesExtentions = glGetString(GL_EXTENSIONS);
 //    [self addString:[NSString stringWithUTF8String:(const char *)oglesExtentions] withFieldID:ADAOpenGLESExtentionsID toPayload:payload];
 }
