@@ -33,6 +33,15 @@ inline static NSURL* cacheURLForFilename(NSString *filename)
 
 + (ADAPayloadOperation *)payloadOperation:(ADAPayload *)aPayload
 {
+#ifdef DEBUG
+    if(AmIBeingDebugged())
+    {
+        return [self blockOperationWithBlock:^{
+            NSLog(@"[ADA ANALYTICS] Debugger attached, this is the data we would send to the server:\n%@", [aPayload payloadData]);
+        }];
+    }
+#endif //DEBUG
+    
     ADAPayloadOperation *me = [self blockOperationWithBlock:^{
         //Check network
         NSError *error = nil;
