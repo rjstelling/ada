@@ -32,7 +32,9 @@
 
 - (IBAction)send:(id)sender
 {
+#ifdef DEBUG
     [ADAAnalytics resendPayload];
+#endif
 }
 
 @end
