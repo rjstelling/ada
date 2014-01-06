@@ -36,5 +36,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>ADASecretKey</key>
+	<string>0476DF1D-ABB9-4528-AF5F-814455C9B1A9</string>
 </dict>
 </plist>
