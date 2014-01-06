@@ -58,6 +58,12 @@ const NSInteger ADAInitialCapacity = (1024 * 2); //2k
 
 #pragma mark - Private API
 
+- (void)addSecret
+{
+    NSString *secret = [[NSBundle mainBundle] objectForInfoDictionaryKey:ADASecretKey];;
+    [self appendData:[ADAPayload dataField:ADASecret data:[secret UTF8String] length:secret.length]];
+}
+
 - (void)addVersion
 {
     [self appendData:[ADAPayload dataField:ADAMajorVersionID data:&ADAMajorVersion length:sizeof(ADAMajorVersion)]];
@@ -141,6 +147,9 @@ const NSInteger ADAInitialCapacity = (1024 * 2); //2k
 
     NSAssert(initError == Z_OK, @"Error defating data");
     
+    if(initError != Z_OK)
+        return nil;
+    
     //The zlib documentation states that destination buffer size must be at least 0.1% larger than avail_in plus 12 bytes.
     NSMutableData *compressedData = [NSMutableData dataWithLength:inData.length * 1.01 + 12];
     
@@ -175,7 +184,7 @@ const NSInteger ADAInitialCapacity = (1024 * 2); //2k
     
     [compressedData setLength:zlibStreamStruct.total_out];
     
-    NSLog(@"Compressed data from %lu bytes to %lu bytes (%f%%)", inData.length, compressedData.length, 100-((float)compressedData.length/(float)inData.length)*100.0);
+    NSLog(@"Compressed data from %lu bytes to %lu bytes (%f%%)", (unsigned long)inData.length, (unsigned long)compressedData.length, 100-((float)compressedData.length/(float)inData.length)*100.0);
     
     return [compressedData copy];
 }

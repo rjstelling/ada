@@ -9,11 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "ADATypes.h"
 
+#define ADASecretKey @"ADASecretKey"
+
 extern const NSInteger ADADataFieldByteLength;
 
 typedef NS_ENUM(ADAInt32, ADADataFieldID)
 {
     //0x000 -> 0xFFF
+    
+    ADASecret = 0x0000,
     
     //0x001 -> 0x0FF are reserved for device idetification
     ADADeviceModelID = 0x0001,
