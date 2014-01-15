@@ -9,4 +9,4 @@ A light weight anonymous iOS analytics library. Access to the data collected is 
 - Very low memory footprint. Any object should be released ASAP.
 - Minimal network usage. Data payload should be as small as possible. 
 - Anonymous. No users or app related data should be sent to the server.
-- No dependancies. The code should not depend on any 3rd pary framework or libary.
+- Minimal dependancies. The code should not depend on any 3rd pary framework or libary. However 1st party dependancies are used. 
